@@ -1,0 +1,10 @@
+{
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+    "C_Cpp.codeAnalysis.clangTidy.useBuildPath": true,
+    "C_Cpp.default.compileCommands": "build/compile_commands.json",
+    "files.associations": {
+        "exception": "cpp"
+    }
+}
