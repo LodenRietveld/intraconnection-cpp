@@ -15,7 +15,6 @@ main(int argc, char** argv)
 
         std::cout << "Adcs initialized, starting read" << std::endl;
 
-        //reads do not work, check i2c bus comms
         while (true) {
             if (adc1.read()) {
                 for (int i = 0; i < 4; i++){
@@ -28,7 +27,7 @@ main(int argc, char** argv)
                     std::cout << "Read value " << (i+4) << ": " << adc2.get(i) << std::endl;
                 }
             }
-            std::this_thread::sleep_for(500ms);
+            std::this_thread::sleep_for(16ms);
         }
     } catch (std::runtime_error& e) {
         std::cout << "Error initializing adcs: " << e.what() << std::endl;
