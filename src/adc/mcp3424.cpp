@@ -52,15 +52,6 @@ mcp3424::init()
     return true;
 }
 
-void
-mcp3424::copy_data_from_read(uint8_t* start_of_package, uint8_t channel)
-{
-    if (r != rate_t::sr3_75) {
-        data[channel] = (start_of_package[0] << 8) | (start_of_package[1]);
-    } else {
-        data[channel] = (start_of_package[0] << 16) | (start_of_package[1] << 8) | (start_of_package[2]);
-    }
-}
 
 bool
 mcp3424::read()

@@ -58,7 +58,7 @@ struct mcp3424_control
 class mcp3424
 {
 public:
-    
+    static constexpr int num_channels = 4;
 
     mcp3424(uint8_t addr, gain_t g = gain_t::x1, conversion_mode_t m = conversion_mode_t::continuous, rate_t r = rate_t::sr60);
     ~mcp3424();
@@ -77,17 +77,11 @@ private:
     rate_t r = rate_t::sr60;
 
     mcp3424_control config{g, m, r};
-
-    static constexpr int num_channels = 4;
     const int data_and_config_size = r == rate_t::sr3_75 ? 4 : 3;
-    const int read_buffer_size = num_channels * data_and_config_size;
 
     i2c conn;
 
     int32_t data[num_channels];
-
-    void
-    copy_data_from_read(uint8_t* start_of_package, uint8_t channel);
 };
 
 

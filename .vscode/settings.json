@@ -9,6 +9,11 @@
         "array": "cpp",
         "stdio.h": "c",
         "cstddef": "cpp",
-        "limits": "cpp"
+        "limits": "cpp",
+        "istream": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "ranges": "cpp",
+        "utility": "cpp"
     }
 }
