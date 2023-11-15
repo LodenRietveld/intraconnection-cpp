@@ -9,7 +9,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(WIRINGPI_INCLUDE ../WiringPi/wiringPi)
 set(ADC_SRC src/adc/main.cpp
     src/adc/mcp3424.cpp
-    src/i2c/i2c.cpp)
+    src/i2c/i2c.cpp
+    src/i2c/serial_buffer.cpp)
     
 
 find_library(wiring NAMES wiringPi REQUIRED)

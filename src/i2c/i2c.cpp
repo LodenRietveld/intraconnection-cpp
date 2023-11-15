@@ -1,5 +1,9 @@
 #include <iostream>
 
+extern "C" {
+    #include <unistd.h>
+}
+
 #include "i2c/i2c.hpp"
 
 i2c::i2c(uint8_t addr)
@@ -11,6 +15,7 @@ i2c::i2c(uint8_t addr)
     }
 
     i2c_fd = ret;
+    read_buf.set_fd(i2c_fd);
 }
 
 i2c::~i2c()
@@ -30,10 +35,10 @@ i2c::read16(uint8_t reg)
     return static_cast<uint16_t>(wiringPiI2CReadReg16(i2c_fd, reg));
 }
 
-int
-i2c::read_raw()
+uint32_t
+i2c::read_raw(uint8_t size)
 {
-    return wiringPiI2CRead(i2c_fd);
+    return read_buf.read(size);
 }
 
 int
@@ -48,12 +53,12 @@ i2c::write(uint8_t reg, uint8_t* data, uint8_t size)
     return ret;
 }
 
-int
+ssize_t
 i2c::write_raw(uint8_t* data, uint8_t size)
 {
     int ret = 0;
     uint8_t idx = 0;
-    while (--size) {
+    while (size--) {
         ret = wiringPiI2CWrite(i2c_fd, data[idx++]);
     }
 

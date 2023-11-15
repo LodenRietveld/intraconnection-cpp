@@ -5,6 +5,10 @@
     "C_Cpp.codeAnalysis.clangTidy.useBuildPath": true,
     "C_Cpp.default.compileCommands": "build/compile_commands.json",
     "files.associations": {
-        "exception": "cpp"
+        "exception": "cpp",
+        "array": "cpp",
+        "stdio.h": "c",
+        "cstddef": "cpp",
+        "limits": "cpp"
     }
 }
