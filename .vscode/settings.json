@@ -9,6 +9,19 @@
         "array": "cpp",
         "stdio.h": "c",
         "cstddef": "cpp",
-        "limits": "cpp"
+        "limits": "cpp",
+        "istream": "cpp",
+        "*.tcc": "cpp",
+        "format": "cpp",
+        "locale": "cpp",
+        "memory": "cpp",
+        "thread": "cpp",
+        "tuple": "cpp",
+        "variant": "cpp",
+        "functional": "cpp",
+        "utility": "cpp",
+        "compare": "cpp",
+        "cstdint": "cpp",
+        "wpi_version.h": "c"
     }
 }
