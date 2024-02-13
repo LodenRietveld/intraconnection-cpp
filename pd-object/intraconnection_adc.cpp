@@ -22,7 +22,7 @@ typedef struct _intraconnection_adc
 void 
 intraconnection_adc_bang(t_intraconnection_adc* x) 
 {
-    logpost(x, 4, "Reading adcs!\n");
+    logpost(x, 3, "Reading adcs!\n");
     #if defined(TEST)
     for (int i = 0; i < 8; i++){
         SETFLOAT(x->values + i, (t_float) i/0.9f);
@@ -32,10 +32,12 @@ intraconnection_adc_bang(t_intraconnection_adc* x)
     if (x->adc1.read()) {
         for (int i = 0; i < 4; i++){
             int32_t v = x->adc1.get(i);
-            if (v != 0xfefefefe) {
+            logpost(x, 4, "Raw value: %ld", v);
+	    if (v != 0xfefefefe) {
                 float v_float = v;
                 logpost(x, 4, "Setting value %d: %f", idx, v_float);
-                SETFLOAT(x->values + idx++, (t_float) v_float);
+                SETFLOAT(x->values + idx, (t_float) v_float);
+		idx++;
             }
         }
     }
@@ -48,8 +50,9 @@ intraconnection_adc_bang(t_intraconnection_adc* x)
             int32_t v = x->adc2.get(i);
             if (v != 0xfefefefe) {
                 float v_float = v;
-                logpost(x, 4, "Setting value %d: %f", idx, v_float);
-                SETFLOAT(x->values + idx++, (t_float) v_float);
+                logpost(x, 4, "Setting value %d(%d): %f", idx, i, v_float);
+                SETFLOAT(x->values + idx, (t_float) v_float);
+		idx++;
             }
         }
     }

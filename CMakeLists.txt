@@ -12,8 +12,11 @@ set(WIRINGPI_INCLUDE ../wiringPi_mock/wiringPi)
 set(ADC_SRC src/adc/main.cpp
     src/adc/mcp3424.cpp
     src/i2c/i2c.cpp
-    src/i2c/serial_buffer.cpp)
-    
+    src/i2c/serial_buffer.cpp
+    src/util/util.cpp)
+
+
+include(FetchContent)
 
 if (APPLE)
     function(my_check validator_result_var item)
@@ -28,17 +31,32 @@ else()
     find_library(wiring NAMES wiringPi REQUIRED)
 endif()
 
+find_library(zmq NAMES zmq REQUIRED)
 
+FetchContent_Declare(
+    cppzmq
+    GIT_REPOSITORY  https://github.com/zeromq/cppzmq.git
+    GIT_TAG         c94c20743ed7d4aa37835a5c46567ab0790d4acc
+)
+
+set(CPPZMQ_BUILD_TESTS OFF)
+
+FetchContent_MakeAvailable(cppzmq)
+
+message("Library path: ${cppzmq}")
 
 add_executable(intraconnection-adc ${ADC_SRC})
 
 target_include_directories(intraconnection-adc PRIVATE
     include
     ${WIRINGPI_INCLUDE}
+    ${cppzmq_SOURCE_DIR}
 )
 
 target_link_libraries(intraconnection-adc PUBLIC
     ${wiring}
+    cppzmq
+    ${zmq}
 )
 
 add_library(mcp3424 SHARED

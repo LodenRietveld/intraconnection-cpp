@@ -20,20 +20,21 @@ ${WIRING_DIR}/softTone.c
 
 datafiles = mcp3424.pd README.txt LICENSE.txt
 
-
+ifeq (${APPLE},true)
 cflags?=-mmacosx-version-min=13.2
+c.flags:=-stdlib=libc 
+CXXFLAGS:=-stdlib=libc++ 
+endif
 
 CFLAGS=?=-I../include \
 -I${WIRING_DIR}
 
-c.flags:=-std=gnu11 \
--stdlib=libc
+c.flags +=-std=gnu11
 
 CPPFLAGS?=-I../include \
 -I${WIRING_DIR}
 
-CXXFLAGS:=-std=gnu++17 \
--stdlib=libc++
+CXXFLAGS +=-std=gnu++17
 
 CC=gcc
 CXX=g++
