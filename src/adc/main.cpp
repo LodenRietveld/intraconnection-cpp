@@ -13,10 +13,34 @@
 #include <zmq.hpp>
 
 #include "util/util.hpp"
+#include "util/mock_adc.hpp"
 #include "adc/mcp3424.hpp"
+#include "adc/adcs.hpp"
 
-// #define debug_msg
+#define mock_values
 
+#ifdef mock_values
+using adc_t = mock_adc;
+#else
+using adc_t = mcp3424;
+#endif
+
+ #define debug_log
+
+#ifdef debug_log
+void
+debug(const std::string& msg, bool endl = true)
+{
+    std::cout << msg;
+    if (endl)
+        std::cout << std::endl;
+}
+#else
+void
+debug(const std::string& msg, bool endl = true)
+{
+}
+#endif
 
 int
 main(int argc, char** argv)
@@ -29,51 +53,21 @@ main(int argc, char** argv)
     sock.connect("udp://::1:5555");
 
     try {
-        mcp3424 adc1(0x68);
-        mcp3424 adc2(0x69);
-	
-        std::vector<float> adc_values;
+        adcs<adc_t> adcs(0x68, 0x69, true);
 
         while (true) {
-	        uint8_t idx = 0;
-	        bool change = false;
+	        if (adcs.read()) {
+                //std::string msg = "msg ";
+                //msg.append(adcs.to_string());
+                //msg.append(";");
 
-            if (adc1.read()) {
-	           	change = true;
-                for (int i = 0; i < 4; i++){
-                    adc_values.push_back(adc1.get(i));
-                }
-            }
+                auto msg = adcs.to_string();
 
-            if (adc2.read()) {
-	        	change = true;
-                for (int i = 0; i < 4; i++){
-		            adc_values.push_back(adc2.get(i));
-                }
-            }
-
-#ifdef debug_msg
-            // change random value
-            int ridx = rand() % 8;
-            adc_values[ridx] = (rand() % 1000) / 100.f;
-            std::cout << "changing idx " << ridx << std::endl;
-            std::cout << "adc_values size " << adc_values.size() << std::endl;
-#endif
-
-	        if (change) {
-                std::string msg = "msg ";
-                msg.append(intra::to_string(adc_values));
-                msg.append(";");
-
-#ifdef debug_msg
-                std::cout << "Sending message:" << std::endl;
-                std::cout << msg << std::endl;
-#endif
+                debug(msg);
 
                 sock.send(zmq::message_t(msg), zmq::send_flags::none);
 	        }
             
-            adc_values.clear();
             std::this_thread::sleep_for(16ms);
         }
     } catch (std::runtime_error& e) {

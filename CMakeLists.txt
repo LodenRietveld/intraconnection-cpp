@@ -11,9 +11,11 @@ set(CMAKE_SHARED_LIBRARY_SUFFIX .so)
 set(WIRINGPI_INCLUDE ../wiringPi_mock/wiringPi)
 set(ADC_SRC src/adc/main.cpp
     src/adc/mcp3424.cpp
+    src/adc/adcs.cpp
     src/i2c/i2c.cpp
     src/i2c/serial_buffer.cpp
-    src/util/util.cpp)
+    src/util/util.cpp
+    src/util/mock_adc.cpp)
 
 
 include(FetchContent)
