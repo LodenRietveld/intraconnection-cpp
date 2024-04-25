@@ -1,3 +1,6 @@
 [submodule "pd-lib-builder"]
 	path = pd-lib-builder
 	url = https://github.com/pure-data/pd-lib-builder/
+[submodule "analog_filter"]
+	path = analog_filter
+	url = https://github.com/inter-bellum/analog_filter.git

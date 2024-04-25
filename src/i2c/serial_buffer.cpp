@@ -2,6 +2,8 @@ extern "C" {
     #include <unistd.h>
 }
 
+#include <cstring>
+
 #include "i2c/serial_buffer.hpp"
 
 void
@@ -16,7 +18,8 @@ serial_buffer_t::read(size_t size)
     if (size < 3 || size > 4)
         return err;
     
-    uint8_t read_buf[size] = {0};
+    uint8_t read_buf[size];
+    memset(read_buf, 0, size);
     auto res = ::read(fd, reinterpret_cast<void*>(read_buf), size);
 
     if (res < 0)

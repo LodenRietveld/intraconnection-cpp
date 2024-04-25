@@ -11,7 +11,7 @@ class mock_adc {
         bool
         read();
 
-        float
+        int32_t
         get(int index);
 
     private:

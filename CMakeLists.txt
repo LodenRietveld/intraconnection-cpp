@@ -8,6 +8,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_SHARED_LIBRARY_SUFFIX .so)
 
+if(DEFINED ENV{CONDA_PREFIX})
+  set(CMAKE_IGNORE_PATH $ENV{CONDA_PREFIX}/bin)
+endif()
+
 set(WIRINGPI_INCLUDE ../wiringPi_mock/wiringPi)
 set(ADC_SRC src/adc/main.cpp
     src/adc/mcp3424.cpp
@@ -29,11 +33,14 @@ if (APPLE)
     endfunction()
 
     find_library(wiring NAMES wiringPi VALIDATOR my_check REQUIRED)
+    add_compile_definitions(MOCK_VALUES)
+    find_library(zmq NAMES zmq REQUIRED 
+        PATH /usr/local/lib)
 else()
     find_library(wiring NAMES wiringPi REQUIRED)
+    find_library(zmq NAMES zmq REQUIRED)
 endif()
 
-find_library(zmq NAMES zmq REQUIRED)
 
 FetchContent_Declare(
     cppzmq
@@ -41,18 +48,19 @@ FetchContent_Declare(
     GIT_TAG         c94c20743ed7d4aa37835a5c46567ab0790d4acc
 )
 
+option(CPPZMQ_BUILD_TESTS OFF)
 set(CPPZMQ_BUILD_TESTS OFF)
 
 FetchContent_MakeAvailable(cppzmq)
-
-message("Library path: ${cppzmq}")
 
 add_executable(intraconnection-adc ${ADC_SRC})
 
 target_include_directories(intraconnection-adc PRIVATE
     include
+    /usr/local/include/
     ${WIRINGPI_INCLUDE}
     ${cppzmq_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/analog_filter/include
 )
 
 target_link_libraries(intraconnection-adc PUBLIC
@@ -70,6 +78,7 @@ add_library(mcp3424 SHARED
 target_include_directories(mcp3424 PRIVATE
     include
     ${WIRINGPI_INCLUDE}
+    ${CMAKE_SOURCE_DIR}/analog_filter/include
 )
 
 target_link_libraries(mcp3424 PUBLIC

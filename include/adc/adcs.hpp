@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <cinttypes>
+#include <iostream>
 
 #include "adc/constants.hpp"
 #include "util/util.hpp"
@@ -25,8 +26,8 @@ class adcs {
         std::unique_ptr<T> adc2;
         std::vector<float> adc_values;
         bool new_values = false;
-        bool scale = false;
-        const float max_adc_val = 2048.f;
+        bool scale = true;
+        const float max_adc_val = 16838.f;
 
         bool prefix_to_string = false;
         const uint8_t active_channels = ADC_CHANNELS;
@@ -77,6 +78,11 @@ adcs<T>::read_single_adc(std::unique_ptr<T>& adc)
 	    new_values = true;
         for (int i = 0; i < 4; i++){
             uint32_t v = adc->get(i);
+
+            if (v == 0xfefefefe) {
+                adc_values.push_back(0);
+                continue;
+            }
 
             if (scale) {
                 adc_values.push_back(v / max_adc_val);

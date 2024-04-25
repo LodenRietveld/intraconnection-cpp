@@ -6,7 +6,6 @@
 #include <vector>
 
 #include <string.h>
-#include <bits/stdc++.h> 
 #include <stdlib.h> 
 #include <unistd.h>
 
@@ -17,17 +16,17 @@
 #include "adc/mcp3424.hpp"
 #include "adc/adcs.hpp"
 
-#define mock_values
-
-#ifdef mock_values
+#ifdef MOCK_VALUES
 using adc_t = mock_adc;
 #else
 using adc_t = mcp3424;
 #endif
 
- #define debug_log
+serial_t Serial;
 
-#ifdef debug_log
+#define DEBUG_LOG
+
+#ifdef DEBUG_LOG
 void
 debug(const std::string& msg, bool endl = true)
 {
@@ -57,10 +56,6 @@ main(int argc, char** argv)
 
         while (true) {
 	        if (adcs.read()) {
-                //std::string msg = "msg ";
-                //msg.append(adcs.to_string());
-                //msg.append(";");
-
                 auto msg = adcs.to_string();
 
                 debug(msg);

@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "EMA.hpp"
+#include "Pot.hpp"
 #include "i2c/i2c.hpp"
 
 enum class gain_t : uint8_t
@@ -79,9 +81,12 @@ private:
     mcp3424_control config{g, m, r};
     const int data_and_config_size = r == rate_t::sr3_75 ? 4 : 3;
 
+    Pot<EMA, uint16_t, 14, 12> filter{0, nullptr};
+
     i2c conn;
 
     int32_t data[num_channels];
+    bool data_rdy[num_channels];
 };
 
 

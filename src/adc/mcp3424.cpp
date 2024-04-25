@@ -34,6 +34,8 @@ mcp3424::mcp3424(uint8_t addr, gain_t g, conversion_mode_t m, rate_t r)
     
     if (!init())
         throw std::runtime_error("mcp init failed");
+
+    filter.initialize(0, 0);
 }
 
 mcp3424::~mcp3424()
@@ -74,7 +76,8 @@ mcp3424::read()
             mcp3424_control config(res & 0xff);
 
             if (config.is_ready()) {
-                this->data[i] = data;
+                this->data_rdy[i] = filter.update(data);
+                this->data[i] = filter.read();
                 break;
             }
 
@@ -88,8 +91,10 @@ mcp3424::read()
 int32_t
 mcp3424::get(uint8_t channel)
 {
-    if (channel < num_channels)
+    if (channel < num_channels && data_rdy[channel]) {
+        data_rdy[channel] = false;
         return data[channel];
+    }
     
     return 0xfefefefe;
 }
